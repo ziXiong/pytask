@@ -4,7 +4,7 @@ from setuptools import setup
 
 
 setup(
-    version='1.0',
+    version='1.0.1',
     name='pytask',
     description='A Database based Python task runner',
     author='quezixiong',

@@ -15,6 +15,13 @@ def add_task(task):
     store_engine.add_task(task)
 
 
+def init_db():
+    """
+    init db storage.
+    """
+    store_engine.init_db()
+
+
 def cancel_task(biz_code, biz_num):
     """
     取消未执行的任务

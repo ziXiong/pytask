@@ -26,7 +26,7 @@ class Task(Model):
     create_time = Column(DateTime, nullable=False)
     update_time = Column(DateTime, nullable=False)
 
-    __table_args__ = (UniqueConstraint('biz_num', 'biz_code', name='idx_task_biz'))
+    __table_args__ = (UniqueConstraint('biz_num', 'biz_code', name='idx_task_biz'), )
 
     def __str__(self):
         return 'biz_code: %s, biz_num: %s, when: %s, biz_ext: %s' % \
