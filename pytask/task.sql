@@ -1,7 +1,6 @@
 # 任务存储表
 CREATE TABLE t_task (
   id       INT PRIMARY KEY AUTO_INCREMENT ,
-  biz_num  VARCHAR(100) NOT NULL, # 业务关联代码
   biz_code VARCHAR(50)  NOT NULL, # 任务场景编码
   `when`     DATETIME     NOT NULL, # 执行时间点
   biz_ext TEXT, # 扩展信息

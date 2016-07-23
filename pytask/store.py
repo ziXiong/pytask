@@ -36,9 +36,9 @@ class TaskStore:
 
         return task.id
 
-    def finished_task(self, biz_code, biz_num):
+    def finished_task(self, task_id):
         """delete task from db"""
-        self.session.query(Task).filter(Task.biz_code == biz_code, Task.biz_num == biz_num).delete()
+        self.session.query(Task).filter(Task.id == task_id).delete()
         self.session.commit()
 
     def get_undo_tasks(self):
@@ -57,9 +57,9 @@ class TaskStore:
         self.session.commit()
         return processing_tasks
 
-    def retry_task(self, biz_code, biz_num, next_time):
+    def retry_task(self, task_id, next_time):
         """set when to a retry task"""
-        self.session.query(Task).filter(Task.biz_code == biz_code, Task.biz_num == biz_num).update(
+        self.session.query(Task).filter(Task.id == task_id).update(
             {Task.status: 0, Task.when: next_time, Task.update_time: datetime.now()})
         self.session.commit()
 

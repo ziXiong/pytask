@@ -17,7 +17,6 @@ class Task(Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     biz_code = Column(String(50), nullable=False)  # Business code
-    biz_num = Column(String(100), nullable=False)  # Code that identify each task
     when = Column(DateTime, nullable=False, index=True)  # When to execute task
     biz_ext = Column(Text)  # Addition data for executing task
 
@@ -25,8 +24,6 @@ class Task(Model):
     version = Column(SmallInteger, nullable=False, server_default='0')
     create_time = Column(DateTime, nullable=False)
     update_time = Column(DateTime, nullable=False)
-
-    __table_args__ = (UniqueConstraint('biz_num', 'biz_code', name='idx_task_biz'), )
 
     def __str__(self):
         return 'biz_code: %s, biz_num: %s, when: %s, biz_ext: %s' % \

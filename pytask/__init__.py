@@ -41,12 +41,12 @@ def register_task_handler(task_handler):
     register_handler(task_handler)
 
 
-def start():
+def start(daemon=False):
     """
     开启服务
     :return:
     """
-    run()
+    run(daemon)
 
 
 def shutdown():

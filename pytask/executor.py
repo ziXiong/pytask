@@ -46,18 +46,18 @@ class TaskProcessThread(threading.Thread):
                     next_time = handler_map.get(task.biz_code).handle(task)
                     if next_time:
                         logger.info('retry the task: %s' % task)
-                        store_engine.retry_task(task.biz_code, task.biz_num, next_time=next_time)
+                        store_engine.retry_task(task.id, next_time=next_time)
                     else:
                         logger.info('finished the task: %s' % task)
-                        store_engine.finished_task(task.biz_code, task.biz_num)
+                        store_engine.finished_task(task.id)
                 except Exception:
                     logger.exception('fail process task: %s' % task)
         else:
             logger.info('the task executor had shutdown')
 
 
-def run():
+def run(daemon):
     if not is_running:
-        TaskProcessThread().start()
+        TaskProcessThread(daemon=daemon).start()
     else:
         logger.info('task is running, not allow start again')
