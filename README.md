@@ -1,6 +1,6 @@
 PyTask
 ======
-一个基于数据库的定时任务组件, 在指定的时间点执行任务, 超实用!!!
+一个基于数据库的定时任务组件, 在指定的时间点执行任务, 超实用!!!  
 不同于sched、schedule、crontab等执行`周期性任务`, pytask是执行`定时`任务。
 
 ## 安装
@@ -19,7 +19,7 @@ pytask把任务的执行时间和数据存储在数据库, 在另一个线程中
   
 ## 使用
 
-### 配置数据库, 初始化数据库(第一次)
+### 配置数据库, 初始化数据库(第一次使用时)
 pytask依赖于SQLAchemy存储任务信息到数据库
 
 ```python
@@ -53,7 +53,7 @@ class OrderTimeoutHandler(TaskHandler):
         
 register_handler(OrderTimeoutHandler)
 ```
-biz_code标识了一个任务, 在添加任务时要填写相应的code, pytask才会找到handler.
+biz_code标识了一个任务(业务码), 在添加任务时要填写相应的code, pytask才会找到handler.
 
 ### 添加任务
 
@@ -66,7 +66,7 @@ timeout_time = datetime.now() + timedelta(minutes=30)
 data = dict()  # whatever data you need when calling handler.
 add_task(Task(biz_code='order_timeout', when=timeout_time, biz_ext=json.dumps(data)))
 ```
-添加一条任务, biz_code为任务的标识, 对应定义handler时的biz_code, when指定任务被执行的时间, biz_ext传入任务执行时需要的数据。
+添加一条任务, biz_code为任务的标识(业务码), 对应注册任务时的biz_code, when指定任务被执行的时间, biz_ext传入任务执行时需要的数据。
 
 
 ### 完成了~~
