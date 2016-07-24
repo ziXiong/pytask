@@ -12,61 +12,68 @@ PyTask
     cd pytask & python setup.py install
   
 ## 原理简介
-pytask把任务的执行时间和数据存储在数据库, 在另一个线程中循环地取出到时间的任务并执行。
-执行一个任务需要两步:
-* 注册任务
-* 执行任务
+pytask把任务的执行时间和相关数据存储在数据库, 在另一个线程中循环地取出到了指定时间的任务并执行。
+添加一个pytask任务需要两步。
+* 注册任务handler
+* 添加任务
   
-## 使用
-
-### 配置数据库, 初始化数据库(第一次使用时)
+## 初始化数据库(第一次使用前)
+[完整的初始化数据库的例子](./examples/init_db.py)
 pytask依赖于SQLAchemy存储任务信息到数据库
 
 ```python
-# 本地数据库, sqlchemy
+import pytask
+
+# config dict, like you config your SQLAlchemy db.
 sqlchemy_db = dict(
     drivername='mysql+mysqlconnector',
     host='localhost',
-    username='root',
-    password='rootmima',
-    database='apphelper',
+    username='username',
+    password='password',
+    database='mydatabase',
 )
-import pytask
-pytask.conf(sqlchemy_db)
 
+pytask.config(sqlchemy_db)
+
+# do this, then you can see a table `t_task` in your database.
 pytask.init_db()
 ```
 
-### 注册任务
+## 使用步骤
+[完整的例子](./examples/order_timeout.py)
+### 步骤一: 注册任务
 例如一个30分钟后订单过期的任务
 ```python
-from pytask import TaskHandler, register_handler
-
-class OrderTimeoutHandler(TaskHandler):
+# register a task handler
+class OrderTimeoutHandler(pytask.TaskHandler):
     def handle(self, task):
-    ## do the timing task ##
-    print(task)
-    ... 
-    
+        data = json.loads(task.biz_ext) 
+        ### do the timing task ###
+        # order = get_order_by_id(data['id'])
+        # order.set_timeout(True)
+
     def get_biz_code(self):
         return 'order_timeout'  # this code identify a task
-        
-register_handler(OrderTimeoutHandler)
+
+pytask.register_handler(OrderTimeoutHandler)
 ```
 biz_code标识了一个任务(业务码), 在添加任务时要填写相应的code, pytask才会找到handler.
 
-### 添加任务
+### 步骤二: 添加任务
 
 ```python
-import json
-from datetime import datetime, timedelta
-from pytask import add_task, Task
-
+# add an task
 timeout_time = datetime.now() + timedelta(minutes=30)
-data = dict()  # whatever data you need when calling handler.
-add_task(Task(biz_code='order_timeout', when=timeout_time, biz_ext=json.dumps(data)))
+data = dict(id=1)  # whatever data you need when calling handler.
+pytask.add_task(Task(biz_code='order_timeout', when=timeout_time, biz_ext=json.dumps(data)))
 ```
 添加一条任务, biz_code为任务的标识(业务码), 对应注册任务时的biz_code, when指定任务被执行的时间, biz_ext传入任务执行时需要的数据。
 
+### 步骤三: 启动pytask
+```python
+# start pytask. pytask will run in another thread.
+pytask.start(daemon=False)
+```
+在另一个线程中启动task的轮询, pytask将每隔10秒查一次数据库,找出那些到了执行时间的任务并调用相应的handler执行.
 
-### 完成了~~
+### 试试吧~
