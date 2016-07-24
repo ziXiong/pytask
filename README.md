@@ -13,12 +13,10 @@ PyTask
   
 ## 原理简介
 pytask把任务的执行时间和相关数据存储在数据库, 在另一个线程中循环地取出到了指定时间的任务并执行。
-添加一个pytask任务需要两步。
-* 注册任务handler
-* 添加任务
   
 ## 初始化数据库(第一次使用前)
-[完整的初始化数据库的例子](./examples/init_db.py)
+[完整的例子](./examples/init_db.py)   
+
 pytask依赖于SQLAchemy存储任务信息到数据库
 
 ```python
